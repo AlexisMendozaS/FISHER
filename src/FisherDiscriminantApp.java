@@ -206,8 +206,39 @@ public class FisherDiscriminantApp {
             System.out.println("SW^-1 =");
             System.out.println("[" + swInverse[0][0] + " " + swInverse[0][1] + "]");
             System.out.println("[" + swInverse[1][0] + " " + swInverse[1][1] + "]");
+
+            // Verify SW * SW^-1
+            double[][] identity = new double[2][2];
+            identity[0][0] = sw[0][0] * swInverse[0][0] + sw[0][1] * swInverse[1][0];
+            identity[0][1] = sw[0][0] * swInverse[0][1] + sw[0][1] * swInverse[1][1];
+            identity[1][0] = sw[1][0] * swInverse[0][0] + sw[1][1] * swInverse[1][0];
+            identity[1][1] = sw[1][0] * swInverse[0][1] + sw[1][1] * swInverse[1][1];
+
+            System.out.println("SW * SW^-1 =");
+            System.out.println("[" + sw[0][0] + " " + sw[0][1] + "] * [" + swInverse[0][0] + " " + swInverse[0][1] + "]");
+            System.out.println("[" + sw[1][0] + " " + sw[1][1] + "]   [" + swInverse[1][0] + " " + swInverse[1][1] + "]");
+
+            System.out.println("Resultado:");
+            System.out.println("[" + identity[0][0] + " " + identity[0][1] + "]");
+            System.out.println("[" + identity[1][0] + " " + identity[1][1] + "]");
+
+            // Calculate w = SW^-1 * (m1 - m2)
+            double[] differenceMeans = new double[2];
+            differenceMeans[0] = means[0][0] - means[1][0];
+            differenceMeans[1] = means[0][1] - means[1][1];
+
+            System.out.println("m1 - m2 = (" + differenceMeans[0] + ", " + differenceMeans[1] + ")");
+
+            double[] w = new double[2];
+            w[0] = swInverse[0][0] * differenceMeans[0] + swInverse[0][1] * differenceMeans[1];
+            w[1] = swInverse[1][0] * differenceMeans[0] + swInverse[1][1] * differenceMeans[1];
+
+            System.out.println("w = SW^-1 * (m1 - m2) =");
+            System.out.println("[" + w[0] + "]");
+            System.out.println("[" + w[1] + "]");
+            System.out.println();
         } else {
-            System.out.println("La matriz SW no es invertible (determinante es 0).");
+            System.out.println("No se pudo calcular la diferencia de medias. Asegúrate de que los valores estén presentes y sean numéricos.");
         }
     }
 }
