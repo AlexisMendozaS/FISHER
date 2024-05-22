@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="55798025-d7cd-41a6-ae02-8c9f0c676665" name="Changes" comment="Construccion del algoritmo hasta la inverza de la matriz">
+    <list default="true" id="55798025-d7cd-41a6-ae02-8c9f0c676665" name="Changes" comment="Construccion del algoritmo hasta el calculo de w">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/FisherDiscriminantApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FisherDiscriminantApp.java" afterDir="false" />
     </list>
@@ -46,17 +46,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.FisherDiscriminantAnalysis.executor&quot;: &quot;Debug&quot;,
-    &quot;Application.FisherDiscriminantApp.executor&quot;: &quot;Run&quot;,
-    &quot;Application.fisher.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.FisherDiscriminantAnalysis.executor": "Debug",
+    "Application.FisherDiscriminantApp.executor": "Debug",
+    "Application.fisher.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Application.FisherDiscriminantApp">
     <configuration name="FisherDiscriminantAnalysis" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="FisherDiscriminantAnalysis" />
@@ -120,7 +120,15 @@
       <option name="project" value="LOCAL" />
       <updated>1716342252540</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Construccion del algoritmo hasta el calculo de w">
+      <option name="closed" value="true" />
+      <created>1716343369975</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1716343369975</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -137,6 +145,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Construccion del algoritmo hasta las medias" />
     <MESSAGE value="Construccion del algoritmo hasta la inverza de la matriz" />
-    <option name="LAST_COMMIT_MESSAGE" value="Construccion del algoritmo hasta la inverza de la matriz" />
+    <MESSAGE value="Construccion del algoritmo hasta el calculo de w" />
+    <option name="LAST_COMMIT_MESSAGE" value="Construccion del algoritmo hasta el calculo de w" />
   </component>
 </project>

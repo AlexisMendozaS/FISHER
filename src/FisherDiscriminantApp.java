@@ -11,7 +11,9 @@ public class FisherDiscriminantApp {
     private int[] objectsPerGroup;
     private int numNewObjects;
     private java.util.List<JTable> groupTables = new java.util.ArrayList<>();
+    private JTable tableNewObjects; // Declaramos tableNewObjects como un campo de la clase
     private double[][][] scatterMatrices;
+    private String[][] allObjects;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -93,7 +95,7 @@ public class FisherDiscriminantApp {
         newObjectsLabel.setFont(new Font("Serif", Font.BOLD, 18));
         newObjectsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JTable tableNewObjects = new JTable(numNewObjects, 3);
+        tableNewObjects = new JTable(numNewObjects, 3); // Inicializamos tableNewObjects aquí
         tableNewObjects.getColumnModel().getColumn(0).setHeaderValue("Etiqueta");
         tableNewObjects.getColumnModel().getColumn(1).setHeaderValue("X");
         tableNewObjects.getColumnModel().getColumn(2).setHeaderValue("Y");
@@ -115,6 +117,41 @@ public class FisherDiscriminantApp {
     private void calculateMeansAndScatterMatrices() {
         double[][] means = new double[numGroups][2];
         scatterMatrices = new double[numGroups][2][2];
+
+        // Gather all objects from tables
+        int totalObjects = 0;
+        for (int i = 0; i < numGroups; i++) {
+            totalObjects += objectsPerGroup[i];
+        }
+        totalObjects += numNewObjects;
+
+        allObjects = new String[totalObjects][3];
+        int index = 0;
+        for (int i = 0; i < numGroups; i++) {
+            JTable tableGroup = groupTables.get(i);
+            int rowCount = tableGroup.getRowCount();
+
+            for (int row = 0; row < rowCount; row++) {
+                allObjects[index][0] = (String) tableGroup.getValueAt(row, 0); // Label
+                allObjects[index][1] = (String) tableGroup.getValueAt(row, 1); // X
+                allObjects[index][2] = (String) tableGroup.getValueAt(row, 2); // Y
+                index++;
+            }
+        }
+        // Add new objects
+        for (int row = 0; row < numNewObjects; row++) {
+            allObjects[index][0] = (String) tableNewObjects.getValueAt(row, 0); // Label
+            allObjects[index][1] = (String) tableNewObjects.getValueAt(row, 1); // X
+            allObjects[index][2] = (String) tableNewObjects.getValueAt(row, 2); // Y
+            index++;
+        }
+
+        // Print all objects
+        System.out.println("Todos los objetos:");
+        for (int i = 0; i < totalObjects; i++) {
+            System.out.println((i + 1) + ": [" + allObjects[i][0] + ", " + allObjects[i][1] + ", " + allObjects[i][2] + "]");
+        }
+        System.out.println();
 
         // Calculate means
         for (int i = 0; i < numGroups; i++) {
@@ -166,9 +203,8 @@ public class FisherDiscriminantApp {
                 }
             }
 
-            System.out.println("S" + (i + 1) + " =");
-            System.out.println("[" + scatterMatrices[i][0][0] + " " + scatterMatrices[i][0][1] + "]");
-            System.out.println("[" + scatterMatrices[i][1][0] + " " + scatterMatrices[i][1][1] + "]");
+            System.out.println("S" + (i + 1) + "= [" + scatterMatrices[i][0][0] + " " + scatterMatrices[i][0][1] + "]");
+            System.out.println("   [" + scatterMatrices[i][1][0] + " " + scatterMatrices[i][1][1] + "]");
         }
 
         // Calculate SW = S1 + S2
@@ -191,7 +227,6 @@ public class FisherDiscriminantApp {
         // Calculate SW^-1
         double detSW = sw[0][0] * sw[1][1] - sw[0][1] * sw[1][0];
         System.out.println("Determinante de SW = " + detSW);
-
         if (detSW != 0) {
             double[][] swInverse = new double[2][2];
             swInverse[0][0] = sw[1][1] / detSW;
@@ -236,9 +271,20 @@ public class FisherDiscriminantApp {
             System.out.println("w = SW^-1 * (m1 - m2) =");
             System.out.println("[" + w[0] + "]");
             System.out.println("[" + w[1] + "]");
-            System.out.println();
+
+            // Calculate Yi = wt * Xi
+            System.out.println("Cálculo de Yi:");
+            for (int i = 0; i < totalObjects; i++) {
+                String label = allObjects[i][0];
+                double x = Double.parseDouble(allObjects[i][1]);
+                double y = Double.parseDouble(allObjects[i][2]);
+                double yi = w[0] * x + w[1] * y;
+
+                System.out.println("Y" + (i + 1) + " = (" + w[0] + " * " + x + ") + (" + w[1] + " * " + y + ") = " + yi);
+            }
         } else {
-            System.out.println("No se pudo calcular la diferencia de medias. Asegúrate de que los valores estén presentes y sean numéricos.");
+            System.out.println("La matriz SW no es invertible (determinante es 0). No se puede calcular la inversa y, por lo tanto, w.");
         }
     }
 }
+
