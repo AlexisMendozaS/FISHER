@@ -11,6 +11,7 @@ public class FisherDiscriminantApp {
     private int[] objectsPerGroup;
     private int numNewObjects;
     private java.util.List<JTable> groupTables = new java.util.ArrayList<>();
+    private double[][][] scatterMatrices;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -113,6 +114,7 @@ public class FisherDiscriminantApp {
 
     private void calculateMeansAndScatterMatrices() {
         double[][] means = new double[numGroups][2];
+        scatterMatrices = new double[numGroups][2][2];
 
         // Calculate means
         for (int i = 0; i < numGroups; i++) {
@@ -156,9 +158,56 @@ public class FisherDiscriminantApp {
                     double dy = y - meanY;
 
                     System.out.println("(x" + (row + 1) + "-m" + (i + 1) + ")= (" + dx + ", " + dy + ")");
+
+                    scatterMatrices[i][0][0] += dx * dx;
+                    scatterMatrices[i][0][1] += dx * dy;
+                    scatterMatrices[i][1][0] += dy * dx;
+                    scatterMatrices[i][1][1] += dy * dy;
                 }
             }
+
+            System.out.println("S" + (i + 1) + " =");
+            System.out.println("[" + scatterMatrices[i][0][0] + " " + scatterMatrices[i][0][1] + "]");
+            System.out.println("[" + scatterMatrices[i][1][0] + " " + scatterMatrices[i][1][1] + "]");
+        }
+
+        // Calculate SW = S1 + S2
+        double[][] sw = new double[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                sw[i][j] = scatterMatrices[0][i][j] + scatterMatrices[1][i][j];
+            }
+        }
+
+        // Print SW calculation
+        System.out.println("SW = S1 + S2 =");
+        System.out.println("[(" + scatterMatrices[0][0][0] + " + " + scatterMatrices[1][0][0] + ") (" + scatterMatrices[0][0][1] + " + " + scatterMatrices[1][0][1] + ")]");
+        System.out.println("[(" + scatterMatrices[0][1][0] + " + " + scatterMatrices[1][1][0] + ") (" + scatterMatrices[0][1][1] + " + " + scatterMatrices[1][1][1] + ")]");
+
+        System.out.println("SW =");
+        System.out.println("[" + sw[0][0] + " " + sw[0][1] + "]");
+        System.out.println("[" + sw[1][0] + " " + sw[1][1] + "]");
+
+        // Calculate SW^-1
+        double detSW = sw[0][0] * sw[1][1] - sw[0][1] * sw[1][0];
+        System.out.println("Determinante de SW = " + detSW);
+
+        if (detSW != 0) {
+            double[][] swInverse = new double[2][2];
+            swInverse[0][0] = sw[1][1] / detSW;
+            swInverse[0][1] = -sw[0][1] / detSW;
+            swInverse[1][0] = -sw[1][0] / detSW;
+            swInverse[1][1] = sw[0][0] / detSW;
+
+            System.out.println("SW^-1 = 1 / " + detSW + " *");
+            System.out.println("[" + swInverse[0][0] * detSW + " " + swInverse[0][1] * detSW + "]");
+            System.out.println("[" + swInverse[1][0] * detSW + " " + swInverse[1][1] * detSW + "]");
+
+            System.out.println("SW^-1 =");
+            System.out.println("[" + swInverse[0][0] + " " + swInverse[0][1] + "]");
+            System.out.println("[" + swInverse[1][0] + " " + swInverse[1][1] + "]");
+        } else {
+            System.out.println("La matriz SW no es invertible (determinante es 0).");
         }
     }
 }
-
