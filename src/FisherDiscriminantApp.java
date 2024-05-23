@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -209,16 +210,16 @@ public class FisherDiscriminantApp {
 
         // Calculate SW = S1 + S2
         double[][] sw = new double[2][2];
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                sw[i][j] = scatterMatrices[0][i][j] + scatterMatrices[1][i][j];
-            }
+        for (int i = 0; i < numGroups; i++) {
+            sw[0][0] += scatterMatrices[i][0][0];
+            sw[0][1] += scatterMatrices[i][0][1];
+            sw[1][0] += scatterMatrices[i][1][0];
+            sw[1][1] += scatterMatrices[i][1][1];
         }
 
-        // Print SW calculation
         System.out.println("SW = S1 + S2 =");
-        System.out.println("[(" + scatterMatrices[0][0][0] + " + " + scatterMatrices[1][0][0] + ") (" + scatterMatrices[0][0][1] + " + " + scatterMatrices[1][0][1] + ")]");
-        System.out.println("[(" + scatterMatrices[0][1][0] + " + " + scatterMatrices[1][1][0] + ") (" + scatterMatrices[0][1][1] + " + " + scatterMatrices[1][1][1] + ")]");
+        System.out.println("[" + scatterMatrices[0][0][0] + " " + scatterMatrices[0][0][1] + "] + [" + scatterMatrices[1][0][0] + " " + scatterMatrices[1][0][1] + "]");
+        System.out.println("[" + scatterMatrices[0][1][0] + " " + scatterMatrices[0][1][1] + "]   [" + scatterMatrices[1][1][0] + " " + scatterMatrices[1][1][1] + "]");
 
         System.out.println("SW =");
         System.out.println("[" + sw[0][0] + " " + sw[0][1] + "]");
@@ -227,6 +228,7 @@ public class FisherDiscriminantApp {
         // Calculate SW^-1
         double detSW = sw[0][0] * sw[1][1] - sw[0][1] * sw[1][0];
         System.out.println("Determinante de SW = " + detSW);
+
         if (detSW != 0) {
             double[][] swInverse = new double[2][2];
             swInverse[0][0] = sw[1][1] / detSW;
@@ -274,6 +276,7 @@ public class FisherDiscriminantApp {
 
             // Calculate Yi = wt * Xi
             System.out.println("Cálculo de Yi:");
+            double[][] yiResults = new double[totalObjects][4];
             for (int i = 0; i < totalObjects; i++) {
                 String label = allObjects[i][0];
                 double x = Double.parseDouble(allObjects[i][1]);
@@ -281,10 +284,41 @@ public class FisherDiscriminantApp {
                 double yi = w[0] * x + w[1] * y;
 
                 System.out.println("Y" + (i + 1) + " = (" + w[0] + " * " + x + ") + (" + w[1] + " * " + y + ") = " + yi);
+
+                yiResults[i][0] = i + 1;
+                yiResults[i][1] = x;
+                yiResults[i][2] = y;
+                yiResults[i][3] = yi;
             }
+
+            showYiResults(yiResults);
         } else {
             System.out.println("La matriz SW no es invertible (determinante es 0). No se puede calcular la inversa y, por lo tanto, w.");
         }
     }
-}
 
+    private void showYiResults(double[][] yiResults) {
+        JFrame resultsFrame = new JFrame("Resultados de Yi");
+        resultsFrame.setBounds(100, 100, 600, 400);
+        resultsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        resultsFrame.getContentPane().setLayout(new BorderLayout(0, 0));
+
+        String[] columnNames = {"Etiqueta", "X", "Y", "Yi"};
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+        for (double[] result : yiResults) {
+            Object[] row = { "Objeto " + (int)result[0], result[1], result[2], result[3] };
+            model.addRow(row);
+        }
+
+        JTable resultsTable = new JTable(model);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        for (int j = 0; j < resultsTable.getColumnCount(); j++) {
+            resultsTable.getColumnModel().getColumn(j).setCellRenderer(centerRenderer);
+        }
+
+        resultsFrame.getContentPane().add(new JScrollPane(resultsTable), BorderLayout.CENTER);
+        resultsFrame.setVisible(true);
+    }
+}
