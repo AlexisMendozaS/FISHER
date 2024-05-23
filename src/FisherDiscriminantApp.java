@@ -4,6 +4,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.*;
+import java.util.List;
 
 public class FisherDiscriminantApp {
     private JFrame frame;
@@ -15,6 +17,7 @@ public class FisherDiscriminantApp {
     private JTable tableNewObjects; // Declaramos tableNewObjects como un campo de la clase
     private double[][][] scatterMatrices;
     private String[][] allObjects;
+    private double[][] means;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -116,7 +119,7 @@ public class FisherDiscriminantApp {
     }
 
     private void calculateMeansAndScatterMatrices() {
-        double[][] means = new double[numGroups][2];
+        means = new double[numGroups][2];
         scatterMatrices = new double[numGroups][2][2];
 
         // Gather all objects from tables
@@ -299,15 +302,57 @@ public class FisherDiscriminantApp {
 
     private void showYiResults(double[][] yiResults) {
         JFrame resultsFrame = new JFrame("Resultados de Yi");
-        resultsFrame.setBounds(100, 100, 600, 400);
+        resultsFrame.setBounds(100, 100, 700, 400);
         resultsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         resultsFrame.getContentPane().setLayout(new BorderLayout(0, 0));
 
-        String[] columnNames = {"Etiqueta", "X", "Y", "Yi"};
+        String[] columnNames = {"Etiqueta", "X", "Y", "Yi", "Grupo Asignado"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
+        List<Double> yiGroup1 = new ArrayList<>();
+        List<Double> yiGroup2 = new ArrayList<>();
+
         for (double[] result : yiResults) {
-            Object[] row = { "Objeto " + (int)result[0], result[1], result[2], result[3] };
+            Object[] row = { "Objeto " + (int) result[0], result[1], result[2], result[3], "" };
+
+            // Assign group based on source of object
+            if ((int) result[0] <= groupTables.get(0).getRowCount()) {
+                row[4] = "Grupo 1";
+                yiGroup1.add(result[3]);
+            } else if ((int) result[0] <= groupTables.get(0).getRowCount() + groupTables.get(1).getRowCount()) {
+                row[4] = "Grupo 2";
+                yiGroup2.add(result[3]);
+            } else {
+                // For new objects, determine group based on closest Yi
+                double minDistanceGroup1 = Double.MAX_VALUE;
+                double closestYiGroup1 = 0;
+                for (double yi : yiGroup1) {
+                    double distance = Math.abs(result[3] - yi);
+                    if (distance < minDistanceGroup1) {
+                        minDistanceGroup1 = distance;
+                        closestYiGroup1 = yi;
+                    }
+                }
+
+                double minDistanceGroup2 = Double.MAX_VALUE;
+                double closestYiGroup2 = 0;
+                for (double yi : yiGroup2) {
+                    double distance = Math.abs(result[3] - yi);
+                    if (distance < minDistanceGroup2) {
+                        minDistanceGroup2 = distance;
+                        closestYiGroup2 = yi;
+                    }
+                }
+
+                double midpoint = (closestYiGroup1 + closestYiGroup2) / 2;
+
+                if (result[3] <= midpoint) {
+                    row[4] = "Grupo 1";
+                } else {
+                    row[4] = "Grupo 2";
+                }
+            }
+
             model.addRow(row);
         }
 
@@ -321,4 +366,5 @@ public class FisherDiscriminantApp {
         resultsFrame.getContentPane().add(new JScrollPane(resultsTable), BorderLayout.CENTER);
         resultsFrame.setVisible(true);
     }
+
 }
