@@ -300,6 +300,64 @@ public class FisherDiscriminantApp {
         }
     }
 
+    // Método para graficar los puntos Yi en una recta
+    private void plotYiGraph(List<Double> yiGroup1, List<Double> yiGroup2, List<Double> allYi, List<String> groupAssignments) {
+        // Crear un nuevo JFrame para el gráfico
+        JFrame graphFrame = new JFrame("Gráfico de Yi");
+        graphFrame.setBounds(100, 100, 600, 400);
+        graphFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        // Obtener el valor máximo y mínimo de Yi
+        double minYi = Collections.min(allYi);
+        double maxYi = Collections.max(allYi);
+
+        // Ajustar los límites de la gráfica para asegurar que todos los puntos sean visibles
+        double minYiAdjusted = minYi - 0.1 * (maxYi - minYi);
+        double maxYiAdjusted = maxYi + 0.1 * (maxYi - minYi);
+
+        // Crear un JPanel personalizado para dibujar el gráfico
+        JPanel graphPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                // Obtener dimensiones del panel
+                int width = getWidth();
+                int height = getHeight();
+
+                // Dibujar la línea base
+                g.drawLine(50, height / 2, width - 50, height / 2);
+
+                // Dibujar puntos Yi de todos los objetos
+                for (int i = 0; i < allYi.size(); i++) {
+                    Double yi = allYi.get(i);
+                    String group = groupAssignments.get(i);
+                    int x = (int) ((yi - minYiAdjusted) * (width - 100) / (maxYiAdjusted - minYiAdjusted) + 50);
+                    int y = height / 2;
+                    if (group.equals("Grupo 1")) {
+                        g.setColor(Color.BLUE);
+                    } else if (group.equals("Grupo 2")) {
+                        g.setColor(Color.RED);
+                    }
+                    g.fillOval(x - 3, y - 3, 6, 6);
+                }
+
+                // Dibujar números debajo de la línea para indicar la escala
+                g.setColor(Color.BLACK);
+                for (int i = 0; i <= 10; i++) {
+                    int x = 50 + (i * (width - 100) / 10);
+                    double value = minYiAdjusted + i * (maxYiAdjusted - minYiAdjusted) / 10;
+                    g.drawString(String.format("%.1f", value), x, height / 2 + 15);
+                }
+            }
+        };
+
+        graphFrame.getContentPane().add(graphPanel);
+        graphFrame.setVisible(true);
+    }
+
+
+
     private void showYiResults(double[][] yiResults) {
         JFrame resultsFrame = new JFrame("Resultados de Yi");
         resultsFrame.setBounds(100, 100, 700, 400);
@@ -365,6 +423,27 @@ public class FisherDiscriminantApp {
 
         resultsFrame.getContentPane().add(new JScrollPane(resultsTable), BorderLayout.CENTER);
         resultsFrame.setVisible(true);
+        // Agregar un botón para graficar los puntos Yi
+        JButton graphButton = new JButton("Graficar");
+        graphButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<Double> allYi = new ArrayList<>();
+                List<String> groupAssignments = new ArrayList<>();
+
+                for (double[] result : yiResults) {
+                    allYi.add(result[3]);
+                    if ((int) result[0] <= groupTables.get(0).getRowCount()) {
+                        groupAssignments.add("Grupo 1");
+                    } else {
+                        groupAssignments.add("Grupo 2");
+                    }
+                }
+
+                plotYiGraph(yiGroup1, yiGroup2, allYi, groupAssignments);
+            }
+        });
+        resultsFrame.getContentPane().add(graphButton, BorderLayout.SOUTH);
     }
 
 }

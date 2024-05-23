@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="55798025-d7cd-41a6-ae02-8c9f0c676665" name="Changes" comment="Construccion del algoritmo hasta imprimir todos los datos hasta Yi en una nueva tabla">
+    <list default="true" id="55798025-d7cd-41a6-ae02-8c9f0c676665" name="Changes" comment="Construccion del algoritmo hasta definirle los grupos a los objetos nuevos">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/FisherDiscriminantApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FisherDiscriminantApp.java" afterDir="false" />
     </list>
@@ -144,7 +144,15 @@
       <option name="project" value="LOCAL" />
       <updated>1716429710227</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Construccion del algoritmo hasta definirle los grupos a los objetos nuevos">
+      <option name="closed" value="true" />
+      <created>1716439158180</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1716439158180</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -164,6 +172,7 @@
     <MESSAGE value="Construccion del algoritmo hasta el calculo de w" />
     <MESSAGE value="Construccion del algoritmo hasta el calculo Yi" />
     <MESSAGE value="Construccion del algoritmo hasta imprimir todos los datos hasta Yi en una nueva tabla" />
-    <option name="LAST_COMMIT_MESSAGE" value="Construccion del algoritmo hasta imprimir todos los datos hasta Yi en una nueva tabla" />
+    <MESSAGE value="Construccion del algoritmo hasta definirle los grupos a los objetos nuevos" />
+    <option name="LAST_COMMIT_MESSAGE" value="Construccion del algoritmo hasta definirle los grupos a los objetos nuevos" />
   </component>
 </project>
